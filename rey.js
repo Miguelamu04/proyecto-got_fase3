@@ -1,23 +1,32 @@
-import { Guerrero } from "./guerrero.js";
+import { Personaje } from "../clases/personaje.js";
 
-export class Rey extends Guerrero {
-    constructor(nombre, edad, vivo, casa, arma) {
-        super(nombre, edad, vivo, casa, arma);
+export class Rey extends Personaje{
+
+    #añosReinado;
+
+    constructor(nombre = "", age = 0, vivo = true, casa = "", añosReinado = 0){
+        super(nombre, age, vivo, casa);
+        
+        this.#añosReinado = añosReinado;
     }
 
-    atacar(objetivo) {
-        if (this.vida <= 0) {
-            console.log(`${this.nombre} está muerto y no puede atacar.`);
-            return;
+    set añosReinado(valor){
+        if(valor > 0){
+            this.#añosReinado = valor;
+        }else{
+            console.log("Debes de añadir un numero positivo");
         }
+    }
 
-        if (objetivo.vida <= 0) {
-            console.log(`${objetivo.nombre} ya está muerto.`);
-            return;
-        }
+    get añosReinado(){ // Añadir getter
+        return this.#añosReinado;
+    }
 
-        const danio = this.arma ? this.arma.danio : 10;
-        console.log(`${this.nombre} (Rey) ataca con poder real a ${objetivo.nombre} usando ${this.arma ? this.arma.nombre : 'sus puños'} causando ${danio} de daño.`);
-        objetivo.recibirDaño(danio);
+    atacar(){
+        console.log(`${this.nombre} lidera la batalla y anima a sus guerreros.`);
+    }
+
+    gobernar(){
+        console.log(`${this.nombre} gobierna con sabiduria desde hace ${this.añosReinado}`);
     }
 }
