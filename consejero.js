@@ -1,23 +1,23 @@
-import { Guerrero } from "./guerrero.js";
+import { Personaje } from "../clases/personaje.js";
+import { Rey } from "./rey.js";
 
-export class Consejero extends Guerrero {
-    constructor(nombre, edad, vivo, casa, arma) {
-        super(nombre, edad, vivo, casa, arma);
+export class Consejero extends Personaje{
+    #especialidad;
+
+    constructor(nombre = "", age = 0, vivo = true, casa = "", especialidad = ""){
+        super(nombre, age, vivo, casa);
+
+        this.#especialidad = especialidad;
     }
 
-    atacar(objetivo) {
-        if (this.vida <= 0) {
-            console.log(`${this.nombre} está muerto y no puede atacar.`);
-            return;
-        }
-
-        if (objetivo.vida <= 0) {
-            console.log(`${objetivo.nombre} ya está muerto.`);
-            return;
-        }
-
-        const danio = this.arma ? this.arma.danio : 10;
-        console.log(`${this.nombre} (Consejero) ataca astutamente a ${objetivo.nombre} con ${this.arma ? this.arma.nombre : 'sus puños'} causando ${danio} de daño.`);
-        objetivo.recibirDaño(danio);
+    atacar(){
+        console.log(`${this.nombre} no lucha con armas, si no con palagras e inteligencia`);
     }
+
+    aconsejar(rey){
+        if(rey instanceof Rey){
+            console.log(`${this.nombre} aconseja a ${rey.nombre} sobre diplomacia y consejos de guerra`);
+        } 
+    }
+
 }
