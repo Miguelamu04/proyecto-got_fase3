@@ -1,69 +1,56 @@
-export class Guerrero {
-    #nombre;
-    #edad;
-    #vivo;
-    #vida;
-    casa;
-    arma;
+import { Personaje } from "../clases/personaje.js";
+import { Arma } from "../clases/arma.js";
 
-    constructor(nombre, edad, vivo, casa, arma) {
-        this.#nombre = nombre;
-        this.#edad = edad;
-        this.#vivo = vivo;
-        this.#vida = 100;
-        this.casa = casa;
-        this.arma = arma;
+export class Guerrero extends Personaje{
+    #arma;
+    #vida = 100;
+
+    constructor(nombre = "", age = 0, vivo = true, casa = "", arma = null){
+        super(nombre, age, vivo, casa);
+
+        if(arma instanceof Arma) {
+            this.#arma = arma;
+        }
+        
     }
 
-    get nombre() {
-        return this.#nombre;
+    set arma(weapon){
+        if(weapon instanceof Arma){
+            this.#arma = weapon;
+            console.log(`${this.nombre} se ha equipado ${weapon.nombre}`);
+        }else{
+            console.log("Error");
+        }
+        
     }
 
-    get edad() {
-        return this.#edad;
+    get arma(){
+        return this.#arma;
     }
-
-    get vivo() {
-        return this.#vivo;
-    }
-
+    
     get vida() {
         return this.#vida;
     }
 
-    presentarse() {
-        console.log(`Soy ${this.#nombre} de la Casa ${this.casa.nombre}`);
+    entrenar(){
+        console.log(`${this.nombre} se entrena sin descanso para la proxima batalla.`);   
     }
 
-    equiparArma(arma) {
-        this.arma = arma;
-        console.log(`${this.#nombre} ha equipado el arma ${arma.nombre}`);
+    morir(){
+        this.vivo = false;
     }
 
-    atacar(objetivo) {
-        if (this.#vida <= 0) {
-            console.log(`${this.#nombre} está muerto y no puede atacar.`);
-            return;
-        }
-
-        if (objetivo.vida <= 0) {
-            console.log(`${objetivo.nombre} ya está muerto.`);
-            return;
-        }
-
-        const danio = this.arma ? this.arma.danio : 10;
-        console.log(`${this.#nombre} ataca a ${objetivo.nombre} con ${this.arma ? this.arma.nombre : 'sus puños'} causando ${danio} de daño.`);
-        objetivo.recibirDaño(danio);
-    }
-
-    recibirDaño(puntos) {
+    recibirDaño(puntos){
         this.#vida -= puntos;
-        
-        if (this.#vida <= 0) {
+        if(this.#vida <= 0){
             this.#vida = 0;
-            this.#vivo = false;
-        } else {
-            console.log(`${this.#nombre} ahora tiene ${this.#vida} puntos de vida.`);
+            this.morir();
         }
+    }
+
+    ataca(objetivo){
+        const daño = Math.floor(this.#arma.daño * (0.7 + Math.random() * 0.6));
+        console.log(`${this.nombre} ataca a ${objetivo.nombre} causando ${daño} puntos de vida.`);
+        objetivo.recibirDaño(daño);
     }
 }
