@@ -1,40 +1,68 @@
+import { Personaje } from "./personaje.js";
+import { Guerrero } from "../especiales/guerrero.js";
+
 export class Casa {
     #nombre;
     #lema;
-    #miembros = [];
+    #miembros;
 
-    constructor(nombre, lema) {
+    constructor (nombre = "", lema = "", miembros = []){  
         this.#nombre = nombre;
         this.#lema = lema;
+        this.#miembros = miembros;
     }
 
-    get nombre() {
+    set nombre(valor){
+        this.#nombre = valor;
+    }
+
+    set lema(valor){
+        this.#lema = valor;
+    }
+
+    get nombre(){
         return this.#nombre;
     }
 
-    get lema() {
+    get lema(){
         return this.#lema;
     }
-
-    agregarMiembro(personaje) {
-        this.#miembros.push(personaje);
+    get miembros(){
+        return this.#miembros;
     }
 
-    guerrerosDisponibles() {
-        const guerreros = [];
-        this.#miembros.forEach(miembro => {
-            if (typeof miembro.atacar === 'function' && miembro.vida > 0) {
-                guerreros.push(miembro);
+    agregarMiembro(personaje){
+        if(personaje instanceof Personaje){
+            const existePersonaje = this.#miembros.some(miembro => miembro.nombre === personaje.nombre);
+            
+            if(existePersonaje){
+                console.log("El personaje ya esta registrado");
+            }else if(personaje.casa != this.#nombre){
+                console.log("La casa del personaje no coincide con las casa registrada");
+            } else {
+                this.#miembros.push(personaje);
+                console.log("Personaje registrado");
             }
-        });
-        return guerreros;
+            
+        };
     }
 
-    mostrarMiembros() {
-        console.log(`\nMiembros de la Casa ${this.#nombre}:`);
-        this.#miembros.forEach(m => {
-            const arma = m.arma ? ` - Arma: ${m.arma.nombre}` : '';
-            console.log(`- ${m.nombre} (${m.constructor.name})${arma}`);
-        });
+    visualizarMiembros(){
+        console.log("Casa: " + this.#nombre + ", Lema: " + this.#lema);
+        if(this.#miembros.length === 0){
+            console.log("Casa sin miembros");  
+        } else {
+            const arrayMiembros = Array.from(this.#miembros);
+            arrayMiembros.forEach(elemento => {
+                console.log(`${elemento.nombre} (${elemento.age} años, ${elemento.vivo ? 'Vivo' : 'Muerto'}) - ${elemento.casa}`);
+            });
+        }
+        
+    }
+
+    guerrerosDisponibles(){
+        let guerreros = this.#miembros.filter(miembro => miembro instanceof Guerrero && miembro.vivo);
+
+        return guerreros;
     }
 }
